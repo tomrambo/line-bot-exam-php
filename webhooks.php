@@ -12,66 +12,72 @@ $events = json_decode($content, true);
 // Validate parsed JSON data
 if (!is_null($events['events'])) {
 	// Loop through each event
-	foreach ($events['events'] as $event) {
-		// Reply only when message sent is in 'text' format
-		if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
-				// $text = $event['source']['userId'];
-				// $profile = $event['profile']['display_name'];
-				// Get replyToken
-				$replyToken = $event['replyToken'];
+	$event = $events[1];
+	// Reply only when message sent is in 'text' format
+	if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
+			// $text = $event['source']['userId'];
+			// $profile = $event['profile']['display_name'];
+			// Get replyToken
+			$replyToken = $event['replyToken'];
 
-				if($event['message']['text'] == 'สวัสดี'){
-					$messages_response = 'สวัสดีต้องการให้ฉันช่วยอะไร ';
-				}else if($event['message']['text'] == 'หิวข้าว'){
-					$messages_response = 'กินสิ ';
-				}else if($event['message']['text'] == 'บุ๋ม' || $event['message']['text'] == 'บุ๋มบิ๋ม'){
-					$messages_response = 'ฉันรัก '.$event['message']['text'];
-				}else{
-					$messages_response = 'คุณชื่ออะไร ';
-				}
-				// Build message to reply back
-				$messages = [
-					'type' => 'text',
-					'text' => $messages_response
-				];
-
-		}
-		// Reply only when message sent is in 'sticker' format
-		else if($event['type'] == 'message' && $event['message']['type'] == 'sticker'){
-				if($event['message']['text'] ){
-					$stickerId = $event['message']['stickerId'];
-				}else{
-					$stickerId = 1;
-				}
-
-				$messages = [
-					'type' => 'sticker',
-					'text' => $stickerId
-				];
-		}
-
-			// Make a POST Request to Messaging API to reply to sender
-			$url = 'https://api.line.me/v2/bot/message/reply';
-			$data = [
-				'replyToken' => $replyToken,
-				'messages' => $messages,
+			if($event['message']['text'] == 'สวัสดี'){
+				$messages_response = 'สวัสดีต้องการให้ฉันช่วยอะไร ';
+			}else if($event['message']['text'] == 'หิวข้าว'){
+				$messages_response = 'กินสิ ';
+			}else if($event['message']['text'] == 'บุ๋ม' || $event['message']['text'] == 'บุ๋มบิ๋ม'){
+				$messages_response = 'ฉันรัก '.$event['message']['text'];
+			}else{
+				$messages_response = 'คุณชื่ออะไร ';
+			}
+			// Build message to reply back
+			$messages = [
+				'type' => 'text',
+				'text' => $messages_response
 			];
 
-			$post = json_encode($data);
-			$headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
-
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-			$result = curl_exec($ch);
-			curl_close($ch);
-
-			echo $result . "\r\n";
-
-
 	}
+	// Reply only when message sent is in 'sticker' format
+	else if($event['type'] == 'message' && $event['message']['type'] == 'sticker'){
+			if($event['message']['text'] ){
+				$stickerId = $event['message']['stickerId'];
+			}else{
+				$stickerId = 1;
+			}
+
+			$messages = [
+				'type' => 'sticker',
+				'text' => $stickerId
+			];
+	}else{
+			$messages = [
+				'type' => 'text',
+				'text' => json_encode($event)
+			];
+	}
+
+		// Make a POST Request to Messaging API to reply to sender
+		$url = 'https://api.line.me/v2/bot/message/reply';
+		$data = [
+			'replyToken' => $replyToken,
+			'messages' => [$messages],
+		];
+
+		$post = json_encode($data);
+		$headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		echo $result . "\r\n";
+	// foreach ($events['events'] as $event) {
+	
+	// }
+
 }
 echo "OK";
