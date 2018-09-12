@@ -15,16 +15,13 @@ if (!is_null($events['events'])) {
 	foreach ($events['events'] as $event) {
 		// Reply only when message sent is in 'text' format
 		if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
-		
-
-				// Get text sent
 				// $text = $event['source']['userId'];
-				$profile = $event['profile']['display_name'];
+				// $profile = $event['profile']['display_name'];
 				// Get replyToken
 				$replyToken = $event['replyToken'];
 
 				if($event['message']['text'] == 'สวัสดี'){
-					$messages_response = 'สวัสดีคุณ '.$profile;
+					$messages_response = 'สวัสดีต้องการให้ฉันช่วยอะไร ';
 				}else if($event['message']['text'] == 'หิวข้าว'){
 					$messages_response = 'กินสิ ';
 				}else if($event['message']['text'] == 'บุ๋ม' || $event['message']['text'] == 'บุ๋มบิ๋ม'){
@@ -38,11 +35,26 @@ if (!is_null($events['events'])) {
 					'text' => $messages_response
 				];
 
+		}
+		// Reply only when message sent is in 'sticker' format
+		else if($event['type'] == 'message' && $event['message']['type'] == 'sticker'){
+				if($event['message']['text'] ){
+					$stickerId = $event['message']['stickerId'];
+				}else{
+					$stickerId = 1;
+				}
+
+				$messages = [
+					'type' => 'sticker',
+					'text' => $stickerId
+				];
+		}
+
 			// Make a POST Request to Messaging API to reply to sender
 			$url = 'https://api.line.me/v2/bot/message/reply';
 			$data = [
 				'replyToken' => $replyToken,
-				'messages' => [$messages],
+				'messages' => $messages,
 			];
 
 			$post = json_encode($data);
@@ -58,7 +70,8 @@ if (!is_null($events['events'])) {
 			curl_close($ch);
 
 			echo $result . "\r\n";
-		}
+
+
 	}
 }
 echo "OK";
