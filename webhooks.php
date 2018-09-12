@@ -15,19 +15,23 @@ if (!is_null($events['events'])) {
 	foreach ($events['events'] as $event) {
 		// Reply only when message sent is in 'text' format
 		if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
+		
+
 				// Get text sent
 				// $text = $event['source']['userId'];
 				$profile = $event['profile']['display_name'];
 				// Get replyToken
 				$replyToken = $event['replyToken'];
+
 				if($event['message']['text'] == 'สวัสดี'){
-				$messages_response = 'สวัสดีคุณ '.$profile;
+					$messages_response = 'สวัสดีคุณ '.$profile;
 				}else if($event['message']['text'] == 'หิวข้าว'){
 					$messages_response = 'กินสิ ';
+				}else if($event['message']['text'] == 'บุ๋ม' || $event['message']['text'] == 'บุ๋มบิ๋ม'){
+					$messages_response = 'ฉันรัก '.$event['message']['text'];
 				}else{
-					$messages_response = 'ยินดีที่ได้รู้จัก ';
+					$messages_response = 'คุณชื่ออะไร ';
 				}
-			
 				// Build message to reply back
 				$messages = [
 					'type' => 'text',
