@@ -31,7 +31,7 @@ if (!is_null($events['events'])) {
 					}else{
 						if($event['message']['text'] == '1'){
 							$messages_response = 'เลื่อกรายการสินค้า a. ครีมบำรุงหน้า 1 b. ครีมบำรุงหน้า 2  c. ครีมบำรุงหน้า 3';
-						if($event['message']['text'] == '2'){
+						}else if($event['message']['text'] == '2'){
 							$messages_response = 'โทร 191';
 						}else{
 							$messages_response = 'ต้องการให้ช่วยอะไรค่ะ 1.ต้องการสอบถามข้อมูลสินค้า 2.ต้องการทราบข้อมูลติดต่อภายใน';
@@ -60,7 +60,7 @@ if (!is_null($events['events'])) {
 			}else{
 					$messages = [
 						'type' => 'text',
-						'text' => json_encode($event)
+						'text' => ''
 					];
 			}
 		} catch (Exception $e) {
