@@ -29,8 +29,15 @@ if (!is_null($events['events'])) {
 					}else if($event['message']['text'] == 'บุ๋ม' || $event['message']['text'] == 'บุ๋มบิ๋ม'){
 						$messages_response = 'ฉันรัก '.$event['message']['text'];
 					}else{
-						$messages_response = 'คุณชื่ออะไร ';
+						if($event['message']['text'] == '1'){
+							$messages_response = 'เลื่อกรายการสินค้า a. ครีมบำรุงหน้า 1 b. ครีมบำรุงหน้า 2  c. ครีมบำรุงหน้า 3';
+						if($event['message']['text'] == '2'){
+							$messages_response = 'โทร 191';
+						}else{
+							$messages_response = 'ต้องการให้ช่วยอะไรค่ะ 1.ต้องการสอบถามข้อมูลสินค้า 2.ต้องการทราบข้อมูลติดต่อภายใน';
+						}
 					}
+
 					// Build message to reply back
 					$messages = [
 						'type' => 'text',
